@@ -9,8 +9,7 @@ int main()
     std::string input_file = "input2D_float.txt";
     std::ifstream data_file;
     std::string line;
-    std::vector<float> x_data;
-    std::vector<float> y_data;
+    std::vector<std::pair<float, float>> data;
     int N;
     std::string user_input;
     std::string xi;
@@ -34,8 +33,7 @@ int main()
     std::getline(data_file, line);
 
     while (data_file >> xi >> yi) {         // xi, yi are strings
-        x_data.push_back(std::stof(xi));
-        y_data.push_back(std::stof(yi));
+        data.push_back( {std::stof(xi), std::stof(yi)} );
 }
 
     // Request user to give number of lines to read
@@ -53,7 +51,7 @@ int main()
     std::cout << "Requested " << N << " lines to be printed" << std::endl;
 
     for (int i=0; i<N; i++){
-        std::cout << x_data[i] << " " << y_data[i] << std::endl;
+        std::cout << data[i].first << " " << data[i].second << std::endl;
     }
 
     return 0;
