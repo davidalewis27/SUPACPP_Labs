@@ -41,3 +41,23 @@ bool read_2D_coords_from_file(std::string& file,
 
     return true;
 }
+
+void write_data_to_terminal(const std::vector<std::pair<float, float>>& data) {
+    int N;
+    std::string user_input;
+    // Request user to give number of lines to read
+    std::cout << "Please enter the number of lines to be printed" << std::endl;
+
+    std::cin >> user_input;
+    N = std::stoi(user_input);
+    std::cout << "Requested " << N << " lines to be printed" << std::endl;
+
+    if (N > data.size()) {
+        std::cout << "Requested more than total lines (" << data.size() << "), printing only first 5..." << std::endl;
+        N=5;
+    } 
+
+    for (int i=0; i<N; i++){
+        std::cout << data[i].first << " " << data[i].second << std::endl;
+    }
+}
