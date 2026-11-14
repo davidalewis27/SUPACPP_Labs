@@ -2,48 +2,21 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
+#include "CustomFunctions.h"
 
 int main()
 {
     std::string input_file = "input2D_float.txt";
-    std::ifstream data_file;
-    std::string line;
     std::vector<std::pair<float, float>> data;
     int N;
     std::string user_input;
-    std::string xi;
-    std::string yi;
 
-    // Open the file
-    data_file.open(input_file);
-
-
-    // Check the file is correctly opened
-    // Otherwise, exit programme and return -1 as error code
-    if (!data_file.is_open()) {
-        std::cout << "Error in opening file: " << input_file << std::endl;
+    if (!read_2D_coords_from_file(input_file, data)) {
         return -1;
     }
-    else {
-        std::cout << "File: " << input_file << " opened successfully" << std::endl;
-    }
-
-    // read first line, assume this is header
-    std::getline(data_file, line);
-
-    while (data_file >> xi >> yi) {         // xi, yi are strings
-        data.push_back( {std::stof(xi), std::stof(yi)} );
-}
 
     // Request user to give number of lines to read
     std::cout << "Please enter the number of lines to be printed" << std::endl;
-
-
-    // Close the file
-    data_file.close();
-
-    std::cout << "File: " << input_file << " closed" << std::endl;
 
 
     std::cin >> user_input;
