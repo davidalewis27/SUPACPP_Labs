@@ -2,11 +2,12 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cmath>
 
 // function to read 2D (x,y) pairs from a file and return a vector of pairs
 // file and data are passed as output parameters
 bool read_2D_coords_from_file(std::string& file, 
-                              std::vector<std::pair<float, float>>& data) 
+                              std::vector<std::pair<double, double>>& data) 
                               {
     std::ifstream data_file;
     std::string line;
@@ -32,7 +33,7 @@ bool read_2D_coords_from_file(std::string& file,
 
     while (std::getline(data_file, xi, ',')) {         
         std::getline(data_file, yi); // xi, yi are strings
-        data.push_back( {std::stof(xi), std::stof(yi)} );
+        data.push_back( {std::stod(xi), std::stod(yi)} );
 
     }    
 
@@ -43,7 +44,8 @@ bool read_2D_coords_from_file(std::string& file,
     return true;
 }
 
-void write_data_to_terminal(const std::vector<std::pair<float, float>>& data) {
+
+void write_data_to_terminal(const std::vector<std::pair<double, double>>& data) {
     int N;
     std::string user_input;
     // Request user to give number of lines to read
@@ -61,4 +63,14 @@ void write_data_to_terminal(const std::vector<std::pair<float, float>>& data) {
     for (int i=0; i<N; i++){
         std::cout << data[i].first << " " << data[i].second << std::endl;
     }
+}
+
+
+double two_component_vector_magitude(double x, double y) {
+    
+    double vector_magnitude;
+    
+    vector_magnitude = std::sqrt(x*x + y*y);
+
+    return vector_magnitude;
 }
