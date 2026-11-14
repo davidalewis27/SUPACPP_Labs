@@ -30,7 +30,8 @@ bool read_2D_coords_from_file(std::string& file,
     // read first line, assume this is header
     std::getline(data_file, line);
 
-    while (data_file >> xi >> yi) {         // xi, yi are strings
+    while (std::getline(data_file, xi, ',')) {         
+        std::getline(data_file, yi); // xi, yi are strings
         data.push_back( {std::stof(xi), std::stof(yi)} );
 
     }    
