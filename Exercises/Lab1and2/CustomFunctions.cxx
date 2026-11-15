@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <stdexcept>
 
 // function to read 2D (x,y) pairs from a file and return a vector of pairs
 // file and data are passed as output parameters
@@ -39,7 +40,7 @@ bool read_2D_coords_from_file(const std::string& file,
 
     // Close the file
     data_file.close();
-    std::cout << "File: " << file << " closed" << std::endl;
+    std::cout << "File: " << file << " closed" << "\n" << std::endl;
 
     return true;
 }
@@ -96,6 +97,11 @@ double chi_squared(std::vector<double> obs, std::vector<double> expected, std::v
 
     int N=obs.size();
     double chi = 0.0;
+    
+    if (obs.size() != expected.size() || obs.size() != errors.size())
+        throw std::invalid_argument("chi_squared: size mismatch");
+        
+        
     for (int i=0; i<N; i++){
         chi += ( (obs[i] - expected[i])*(obs[i] - expected[i]) ) / (errors[i]*errors[i]);
     }
@@ -118,6 +124,7 @@ int least_squares_fit(const std::string& data_file,
     double sum_y = 0.0;
     double sum_sq_x = 0.0;
     double sum_xy = 0.0;
+
     
     
     
@@ -137,34 +144,54 @@ int least_squares_fit(const std::string& data_file,
         sum_xy += x*y;
         
     }
+    
+    // same denominator in both terms
     const double denom = N * sum_sq_x - sum_x * sum_x;
-    if (denom == 0.0) {
-        return -1;   // all x equal (or no data)
+    if (denom < 1e-6) {
+        std::cout << "WARN: least_squares_fit denominator small (<1e-6), check result carefully \n" << std::endl;
     }
     
     gradient = ( N*sum_xy - sum_x*sum_y ) / denom;
     intercept = ( sum_sq_x*sum_y - sum_xy*sum_x ) / denom;
     
-    std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << std::endl;   
+    std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << "\n" << std::endl;  
     
+    std::string out_file="least_squares_fit.txt";
+    std::ofstream out_stream;
+    // Open the file
+    out_stream.open(out_file);
+
+
+    // Check the file is correctly opened
+    // Otherwise, return false to be caught back in main
+    if (!out_stream.is_open()) {
+        std::cout << "Error in opening file: " << out_file << std::endl;
+    }
+    else {
+        std::cout << "File: " << out_file << " opened successfully" << std::endl;
+    }
+    out_stream << "y = " << gradient << " x + " << intercept << "\n" << std::endl;
+    out_stream.close();
+     
     // Perfom chi-sqaured only if an error_file is supplied
     if (!error_file.empty()) {
-        std::cout << "Error file supplied: " << error_file << std::endl;
-        std::cout << "Computing chi-squared" << std::endl;
+        std::cout << "Error file supplied: " << error_file << "\n" << std::endl;
+        std::cout << "Computing chi-squared" << "\n" <<std::endl;
         double chi_sq = 0.0;
-        double NDOF = N - 2.0; // DOF = N data points - 2 fit parameters
+    
         std::vector<std::pair<double, double>> data_err;
         double model_i;
         std::vector<double> model;
         std::vector<double> ys;
         std::vector<double> yerrs;
         
+        // Read errors file
         if (!read_2D_coords_from_file(error_file, data_err)) {
             return -1;
         }
         
-        
-        for (std::size_t i = 0; i < data.size(); ++i) {
+        // Compute the expected value from the least squares fit
+        for (int i = 0; i < data.size(); ++i) {
             const double x = data[i].first;
             const double y = data[i].second;
             
@@ -179,9 +206,17 @@ int least_squares_fit(const std::string& data_file,
         chi_sq = chi_squared(ys, model, yerrs);
     
         std::cout << "chi-squared = " << chi_sq << std::endl;
-        std::cout << "chi-squared/NDOF = " << chi_sq/NDOF << std::endl;
         
-       
+        // Check more than 2 data points, if not, do not computed reduced chi-sq
+        if (N <= 2) {
+            std::cout << "Less than two data points provided, not computing chi^2/NDOF" << std::endl;
+        }
+        else {
+            double NDOF;
+            NDOF = N - 2.0; // DOF = N data points - 2 fit parameters
+            std::cout << "NDOF = " << N << " - 2 = " << NDOF  << std::endl;
+            std::cout << "chi-squared/NDOF = " << chi_sq/NDOF << std::endl;
+        }
     }
     
     
@@ -196,8 +231,23 @@ void get_user_choice(int& user_choice) {
     std::cout << "1 - Print N lines of data" << std::endl;
     std::cout << "2 - Print magnitude of all data points" << std::endl;
     std::cout << "3 - Least squares fit" << std::endl;
-    std::cout << "4 - Least squares fit with chi-sqaured" << std::endl;
+    std::cout << "4 - Least squares fit with chi-squared" << std::endl;
+    std::cout << "5 - Compute x^y from data with recursion" << std::endl;
     std::cin >> user_input;
     user_choice = std::stoi(user_input);
     
 }
+
+
+template <typename T>
+T recursive_self_multiply(T x, T y) {
+    long n = std::lround(y);                                // round y to nearest whole number
+    if (n == 0) return 1;                                   // base case: x^0 = 1
+    if (n < 0)  return 1 / recursive_self_multiply(x, T(-n));  // negative exponent
+    return x * recursive_self_multiply(x, T(n - 1));        // x^n = x * x^(n-1)
+}
+
+// explicit instantiations
+template double recursive_self_multiply<double>(double, double);
+template float  recursive_self_multiply<float>(float, float);
+template int  recursive_self_multiply<int>(int, int);

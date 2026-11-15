@@ -14,3 +14,6 @@ void get_user_choice(int& user_choice);
 double chi_squared(std::vector<double> obs, std::vector<double> expected, std::vector<double> errors);
 
 double linear(double x, double p, double q);
+
+template <typename T>
+T recursive_self_multiply(T x, T y);

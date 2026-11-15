@@ -47,11 +47,32 @@ int main()
     else if(user_choice == 3) {
         std::cout << "Requested task: 3" << std::endl;
         least_squares_fit(input_file,gradient,intercept);
-        std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << std::endl;   
+        // std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << std::endl;   
     }
     else if(user_choice == 4) {
-        std::cout << "Requested task: 3" << std::endl;
+        std::cout << "Requested task: 4" << std::endl;
         least_squares_fit(input_file,gradient,intercept,error_file);
+    }
+    else if(user_choice == 5) {
+        std::cout << "Requested task: 5" << std::endl;
+        if (!read_2D_coords_from_file(input_file, data)) {
+            return -1;
+        }
+        N_points = data.size();
+        double func_val;
+        std::vector<double> x_pow_ys;
+        for (int i=0; i<N_points; i++){
+            x = data[i].first;
+            y = data[i].second;
+            
+            func_val = recursive_self_multiply(x,y);
+            std::cout << func_val << std::endl;
+            x_pow_ys.push_back(func_val);
+            
+        }
+        
+        
+    
     }
     else{
         std::cout << "Unrecognised task number: " << user_choice << std::endl;
