@@ -7,6 +7,7 @@
 int main()
 {
     std::string input_file = "input2D_float.txt";
+    std::string error_file = "error2D_float.txt";
     int user_choice;
     int N_points;
     int i;
@@ -14,6 +15,7 @@ int main()
     double x;
     double y;
     std::vector<std::pair<double, double>> data;
+    std::vector<std::pair<double, double>> data_err;
     std::vector<double> vector_magnitudes;
     double gradient, intercept;
     
@@ -46,6 +48,10 @@ int main()
         std::cout << "Requested task: 3" << std::endl;
         least_squares_fit(input_file,gradient,intercept);
         std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << std::endl;   
+    }
+    else if(user_choice == 4) {
+        std::cout << "Requested task: 3" << std::endl;
+        least_squares_fit(input_file,gradient,intercept,error_file);
     }
     else{
         std::cout << "Unrecognised task number: " << user_choice << std::endl;

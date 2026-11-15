@@ -92,13 +92,33 @@ double two_component_vector_magitude(double x, double y) {
 }
 
 
-int least_squares_fit(const std::string& data_file, double& gradient, double& intercept) {
+double chi_squared(std::vector<double> obs, std::vector<double> expected, std::vector<double> errors){
+
+    int N=obs.size();
+    double chi = 0.0;
+    for (int i=0; i<N; i++){
+        chi += ( (obs[i] - expected[i])*(obs[i] - expected[i]) ) / (errors[i]*errors[i]);
+    }
+    
+    return chi;
+}
+
+double linear(double x, double p, double q) {
+    return p*x+q;
+}
+
+int least_squares_fit(const std::string& data_file, 
+                      double& gradient, 
+                      double& intercept,
+                      const std::string& error_file = ""
+                      ){
 
     std::vector<std::pair<double, double>> data;
     double sum_x = 0.0;
     double sum_y = 0.0;
     double sum_sq_x = 0.0;
     double sum_xy = 0.0;
+    
     
     
     if (!read_2D_coords_from_file(data_file, data)) {
@@ -125,6 +145,45 @@ int least_squares_fit(const std::string& data_file, double& gradient, double& in
     gradient = ( N*sum_xy - sum_x*sum_y ) / denom;
     intercept = ( sum_sq_x*sum_y - sum_xy*sum_x ) / denom;
     
+    std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << std::endl;   
+    
+    // Perfom chi-sqaured only if an error_file is supplied
+    if (!error_file.empty()) {
+        std::cout << "Error file supplied: " << error_file << std::endl;
+        std::cout << "Computing chi-squared" << std::endl;
+        double chi_sq = 0.0;
+        double NDOF = N - 2.0; // DOF = N data points - 2 fit parameters
+        std::vector<std::pair<double, double>> data_err;
+        double model_i;
+        std::vector<double> model;
+        std::vector<double> ys;
+        std::vector<double> yerrs;
+        
+        if (!read_2D_coords_from_file(error_file, data_err)) {
+            return -1;
+        }
+        
+        
+        for (std::size_t i = 0; i < data.size(); ++i) {
+            const double x = data[i].first;
+            const double y = data[i].second;
+            
+            model_i = linear(x,gradient,intercept);
+            
+            ys.push_back(y);
+            model.push_back(model_i);
+            yerrs.push_back(data_err[i].second);
+            
+        }
+        
+        chi_sq = chi_squared(ys, model, yerrs);
+    
+        std::cout << "chi-squared = " << chi_sq << std::endl;
+        std::cout << "chi-squared/NDOF = " << chi_sq/NDOF << std::endl;
+        
+       
+    }
+    
     
     return 0;
 
@@ -136,7 +195,8 @@ void get_user_choice(int& user_choice) {
     std::cout << "Which task would you like to perform?" << std::endl;
     std::cout << "1 - Print N lines of data" << std::endl;
     std::cout << "2 - Print magnitude of all data points" << std::endl;
-    std::cout << "3 - Least squares fit with Chi^2" << std::endl;
+    std::cout << "3 - Least squares fit" << std::endl;
+    std::cout << "4 - Least squares fit with chi-sqaured" << std::endl;
     std::cin >> user_input;
     user_choice = std::stoi(user_input);
     
