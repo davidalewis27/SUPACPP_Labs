@@ -10,6 +10,7 @@ int main()
     std::string error_file = "error2D_float.txt";
     int user_choice;
     int N_points;
+    int N_lines;
     int i;
     double mag;
     double x;
@@ -27,7 +28,16 @@ int main()
         if (!read_2D_coords_from_file(input_file, data)) {
             return -1;
         }
-        write_data_to_terminal(data);
+
+        get_number_of_lines(N_lines);
+        
+        // Check if number of lines requested > total
+        if (N_lines > data.size()) {
+            std::cout << "Requested more than total lines (" << data.size() << "), printing only first 5..." << std::endl;
+            N_lines=5; // overwrite user input to be 5 lines
+        } 
+        
+        write_data_to_terminal(data, N_lines);
     
     }
     else if(user_choice == 2) {
