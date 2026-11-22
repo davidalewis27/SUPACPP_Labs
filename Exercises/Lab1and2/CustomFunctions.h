@@ -6,7 +6,6 @@
 #include <fstream>   //
 #include <cmath>     //
 #include <stdexcept> // Handle exceptions
-#include "CustomFunctions.h"  // For custom functions
 
 bool read_2D_coords_from_file(const std::string& file, 
                               std::vector<std::pair<double, double>>& data);
@@ -43,7 +42,7 @@ int least_squares_fit(const std::string& data_file, double& gradient, double& in
 
 void get_user_choice(int& user_choice);
 
-double chi_squared(std::vector<double> obs, std::vector<double> expected, std::vector<double> errors);
+double chi_squared(const std::vector<double>& obs, const std::vector<double>& expected, const std::vector<double>& errors);
 
 double linear(double x, double p, double q);
 

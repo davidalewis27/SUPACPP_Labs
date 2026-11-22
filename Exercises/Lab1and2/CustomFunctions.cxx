@@ -84,7 +84,7 @@ double two_component_vector_magitude(double x, double y) {
 }
 
 
-double chi_squared(std::vector<double> obs, std::vector<double> expected, std::vector<double> errors){
+double chi_squared(const std::vector<double>& obs, const std::vector<double>& expected, const std::vector<double>& errors){
 
     int N=obs.size();
     double chi = 0.0;
@@ -180,7 +180,7 @@ int least_squares_fit(const std::string& data_file,
         }
         
         // Compute the expected value from the least squares fit
-        for (int i = 0; i < data.size(); ++i) {
+        for (std::size_t i = 0; i < data.size(); ++i) {
             const double x = data[i].first;
             const double y = data[i].second;
             
@@ -216,7 +216,9 @@ int least_squares_fit(const std::string& data_file,
 void get_user_choice(int& user_choice) {
 
     std::string user_input;
+    std::cout << "\n" << std::endl;
     std::cout << "Which task would you like to perform?" << std::endl;
+    std::cout << "0 - Exit program" << std::endl;
     std::cout << "1 - Print N lines of data" << std::endl;
     std::cout << "2 - Print magnitude of all data points" << std::endl;
     std::cout << "3 - Least squares fit" << std::endl;
