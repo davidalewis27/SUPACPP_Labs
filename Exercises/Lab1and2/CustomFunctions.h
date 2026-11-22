@@ -52,5 +52,19 @@ double chi_squared(const std::vector<double>& obs,
 
 double linear(double x, double p, double q);
 
+
 template <typename T>
-T recursive_self_multiply(T x, T y);
+T recursive_self_multiply(T x, T y) {
+    long n = std::lround(y);                       // round y to nearest whole number
+
+    if (n == 0) return T(1);                       // base case: x^0 = 1
+    if (n < 0)  return T(1) / recursive_self_multiply(x, T(-n));   // x^-n = 1 / x^n
+
+    double half = recursive_self_multiply(x, T(n / 2)); // x^(n/2)
+
+    if (n % 2 == 0) {
+        return half * half;                        // n even: (x^(n/2))^2
+    } else {
+        return half * half * x;                    // n odd:  (x^(n/2))^2 * x
+    }
+}

@@ -234,15 +234,3 @@ void get_user_choice(int& user_choice) {
 }
 
 
-template <typename T>
-T recursive_self_multiply(T x, T y) {
-    long n = std::lround(y);                                // round y to nearest whole number
-    if (n == 0) return 1;                                   // base case: x^0 = 1
-    if (n < 0)  return 1 / recursive_self_multiply(x, T(-n));  // negative exponent
-    return x * recursive_self_multiply(x, T(n - 1));        // x^n = x * x^(n-1)
-}
-
-// explicit instantiations
-template double recursive_self_multiply<double>(double, double);
-template float  recursive_self_multiply<float>(float, float);
-template int  recursive_self_multiply<int>(int, int);
