@@ -1,9 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <cmath>
-#include <stdexcept>
+#include <iostream>  // I/O
+#include <vector>    // Vectors
+#include <string>    // Strings
+#include <utility>   // To use std::pair
+#include <fstream>   //
+#include <cmath>     //
+#include <stdexcept> // Handle exceptions
+#include "CustomFunctions.h"  // For custom functions
 
 // function to read 2D (x,y) pairs from a file and return a vector of pairs
 // file and data are passed as output parameters
@@ -46,30 +48,6 @@ bool read_2D_coords_from_file(const std::string& file,
 }
 
 
-// Print indvidual data types to the terminal
-// Print vector of pairs of doubles
-void print_item(const std::pair<double, double>& p) {
-    std::cout << p.first << " " << p.second << "\n";
-}
-
-// Print double
-void print_item(double x) {
-    std::cout << x << "\n";
-}
-
-// Print string
-void print_item(const std::string& s) {
-    std::cout << s << "\n";
-}
-
-template <typename T>
-void print_item(const std::vector<T>& v, int& N) {
-    for (int i = 0; i < N; ++i) {
-        print_item(v[i]);               // picks the right overload for T
-    }
-}
-
-
 void get_number_of_lines(int& N) {
     bool not_negative=false;
     std::string user_input;
@@ -97,21 +75,8 @@ void get_number_of_lines(int& N) {
     
 }
 
-// Refactored to print N lines from a vector
-template <typename Container>
-void write_data_to_terminal(const Container& data, int& N) {
-    print_item(data, N);
-
-}
-
-template void write_data_to_terminal<std::vector<std::pair<double, double>>>(const std::vector<std::pair<double, double>>&, int& N);
-template void write_data_to_terminal<std::vector<double>>(const std::vector<double>&, int& N);
-template void write_data_to_terminal<std::vector<int>>(const std::vector<int>&, int& N);
-template void write_data_to_terminal<std::vector<std::string>>(const std::vector<std::string>&, int& N);
-
-
 // Computed the magnitude of a vector
-// assuming(x,y) is position from (0,0)
+// assuming (x,y) is position from (0,0)
 double two_component_vector_magitude(double x, double y) {
     double vector_magnitude;
     vector_magnitude = std::sqrt(x*x + y*y);
@@ -142,7 +107,7 @@ double linear(double x, double p, double q) {
 int least_squares_fit(const std::string& data_file, 
                       double& gradient, 
                       double& intercept,
-                      const std::string& error_file = ""
+                      const std::string& error_file
                       ){
 
     std::vector<std::pair<double, double>> data;
@@ -151,8 +116,6 @@ int least_squares_fit(const std::string& data_file,
     double sum_sq_x = 0.0;
     double sum_xy = 0.0;
 
-    
-    
     
     if (!read_2D_coords_from_file(data_file, data)) {
         return -1;
@@ -173,7 +136,7 @@ int least_squares_fit(const std::string& data_file,
     
     // same denominator in both terms
     const double denom = N * sum_sq_x - sum_x * sum_x;
-    if (denom < 1e-6) {
+    if (std::fabs(denom) < 1e-6) {
         std::cout << "WARN: least_squares_fit denominator small (<1e-6), check result carefully \n" << std::endl;
     }
     

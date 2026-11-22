@@ -1,8 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include "CustomFunctions.h"
+#include <iostream>  // I/O
+#include <vector>    // Vectors
+#include <string>    // Strings
+#include <utility>   // To use std::pair
+#include <fstream>   //
+#include <cmath>     //
+#include <stdexcept> // Handle exceptions
+#include "CustomFunctions.h"  // For custom functions
 
 int main()
 {
@@ -34,10 +37,10 @@ int main()
         // Check if number of lines requested > total
         if (N_lines > data.size()) {
             std::cout << "Requested more than total lines (" << data.size() << "), printing only first 5..." << std::endl;
-            N_lines=5; // overwrite user input to be 5 lines
+            N_lines=std::min<int>(5, data.size());; // overwrite user input to be 5 lines, or data length if < 5
         } 
         
-        write_data_to_terminal(data, N_lines);
+        write_data(data, std::cout, N_lines);
     
     }
     else if(user_choice == 2) {
@@ -50,9 +53,10 @@ int main()
             x = data[i].first;
             y = data[i].second;
             mag = two_component_vector_magitude(x,y);
-            std::cout << "vec = (" << x << "," << y << ") --> magnitude = " << mag << std::endl;
+            // std::cout << "vec = (" << x << "," << y << ") --> magnitude = " << mag << std::endl;
             vector_magnitudes.push_back(mag);
         }
+        write_data(vector_magnitudes, std::cout, N_points);
     }
     else if(user_choice == 3) {
         std::cout << "Requested task: 3" << std::endl;
@@ -80,7 +84,6 @@ int main()
             x_pow_ys.push_back(func_val);
             
         }
-        
         
     
     }

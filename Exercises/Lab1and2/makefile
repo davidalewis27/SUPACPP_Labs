@@ -1,4 +1,4 @@
-CCX=g++
+CXX=g++
 CXXFLAGS=-std=c++20 -w
 TARGET=AnalyseData
 OBJECTS=CustomFunctions.o \
@@ -10,7 +10,7 @@ OBJECTS=CustomFunctions.o \
 
 ${TARGET}:${OBJECTS}
 	@echo "Linking..."
-	${CCX} ${CXXFLAGS} ${OBJECTS} -o ${TARGET}
+	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${TARGET}
 
 clean:
 	@rm -f *.o *~
