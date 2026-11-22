@@ -17,6 +17,7 @@ int main()
 {
     std::string input_file = "input2D_float.txt";
     std::string error_file = "error2D_float.txt";
+    std::string output_directory = "Outputs/";
     int user_choice;
     int N_points;
     int N_lines;
@@ -54,6 +55,15 @@ int main()
                 } 
                 
                 write_data(data, std::cout, N_lines);
+                
+                // wasn't sure if this also needed written to file
+                // so I'll do it just in case
+                std::string selected_N_file = "selected_N_data.txt";
+                std::ofstream out_stream;
+                // Open the file
+                out_stream.open(output_directory + selected_N_file);
+                write_data(data, out_stream, N_lines);
+                out_stream.close();
                 break;
             }
             case 2: {
@@ -70,6 +80,14 @@ int main()
                     vector_magnitudes.push_back(mag);
                 }
                 write_data(vector_magnitudes, std::cout, N_points);
+                
+                
+                std::string vector_mag_file = "vector_magnitudes.txt";
+                std::ofstream out_stream;
+                // Open the file
+                out_stream.open(output_directory + vector_mag_file);
+                write_data(vector_magnitudes, out_stream);
+                out_stream.close();
                 break;
             } 
             
@@ -81,7 +99,7 @@ int main()
             
             case 4:  {
                 std::cout << "Requested task: 4" << std::endl;
-                least_squares_fit(input_file,gradient,intercept,error_file);
+                least_squares_fit(input_file,gradient,intercept,output_directory+"least_squares_fit.txt",error_file);
                 break;
             }
             

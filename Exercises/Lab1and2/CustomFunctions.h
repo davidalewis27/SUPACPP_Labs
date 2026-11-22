@@ -38,11 +38,17 @@ void write_data(const Container& data, std::ostream& out, int N = -1) {
 
 double two_component_vector_magitude(double x, double y);
 
-int least_squares_fit(const std::string& data_file, double& gradient, double& intercept, const std::string& error_file = "");
+int least_squares_fit(const std::string& data_file, 
+                      double& gradient, 
+                      double& intercept, 
+                      const std::string& output_file = "least_squares_fit.txt", 
+                      const std::string& error_file = "");
 
 void get_user_choice(int& user_choice);
 
-double chi_squared(const std::vector<double>& obs, const std::vector<double>& expected, const std::vector<double>& errors);
+double chi_squared(const std::vector<double>& obs, 
+                   const std::vector<double>& expected, 
+                   const std::vector<double>& errors);
 
 double linear(double x, double p, double q);
 

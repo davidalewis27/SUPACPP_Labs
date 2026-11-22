@@ -107,6 +107,7 @@ double linear(double x, double p, double q) {
 int least_squares_fit(const std::string& data_file, 
                       double& gradient, 
                       double& intercept,
+                      const std::string& output_file,
                       const std::string& error_file
                       ){
 
@@ -145,22 +146,21 @@ int least_squares_fit(const std::string& data_file,
     
     std::cout << "Least squares fit: y = " << gradient << " x + " << intercept << "\n" << std::endl;  
     
-    std::string out_file="least_squares_fit.txt";
     std::ofstream out_stream;
     // Open the file
-    out_stream.open(out_file);
+    out_stream.open(output_file);
 
 
     // Check the file is correctly opened
     // Otherwise, return false to be caught back in main
     if (!out_stream.is_open()) {
-        std::cout << "Error in opening file: " << out_file << std::endl;
+        std::cout << "Error in opening file: " << output_file << std::endl;
     }
     else {
-        std::cout << "File: " << out_file << " opened successfully" << std::endl;
+        std::cout << "File: " << output_file << " opened successfully" << std::endl;
     }
     out_stream << "y = " << gradient << " x + " << intercept << "\n" << std::endl;
-    out_stream.close();
+    
      
     // Perfom chi-sqaured only if an error_file is supplied
     if (!error_file.empty()) {
@@ -198,16 +198,20 @@ int least_squares_fit(const std::string& data_file,
         
         // Check more than 2 data points, if not, do not computed reduced chi-sq
         if (N <= 2) {
-            std::cout << "Less than two data points provided, not computing chi^2/NDOF" << std::endl;
+            std::cout << "Two or less data points provided, not computing chi^2/NDOF" << std::endl;
         }
         else {
             double NDOF;
             NDOF = N - 2.0; // DOF = N data points - 2 fit parameters
             std::cout << "NDOF = " << N << " - 2 = " << NDOF  << std::endl;
             std::cout << "chi-squared/NDOF = " << chi_sq/NDOF << std::endl;
+            
+            out_stream << "NDOF = " << N << " - 2 = " << NDOF  << "\n" << std::endl;
+            out_stream << "chi-squared/NDOF = " << chi_sq/NDOF << "\n" << std::endl;
         }
     }
     
+    out_stream.close();
     
     return 0;
 
