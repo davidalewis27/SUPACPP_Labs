@@ -11,6 +11,7 @@
 #include <fstream>   //
 #include <cmath>     //
 #include <stdexcept> // Handle exceptions
+#include <filesystem> // to make Outputs/ if it doesnt exist
 #include "CustomFunctions.h"  // For custom functions
 
 int main()
@@ -24,6 +25,14 @@ int main()
     bool running = true;
     
     if (!read_2D_coords_from_file(input_file, data)) {
+        return -1;
+    }
+    
+    try {
+        std::filesystem::create_directories(output_directory);
+    }
+    catch (const std::filesystem::filesystem_error& e) {
+        std::cout << "Could not create output directory: " << e.what() << std::endl;
         return -1;
     }
     
