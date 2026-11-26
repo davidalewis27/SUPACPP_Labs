@@ -1,0 +1,4 @@
+y = 0.126266 x + 2.026278
+chi-squared = 791244.247383
+NDOF = 23
+chi-squared/NDOF = 34401.923799
