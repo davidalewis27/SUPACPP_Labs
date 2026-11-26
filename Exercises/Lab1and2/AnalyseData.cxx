@@ -49,6 +49,7 @@ int main()
                 } 
                 
                 write_data(data, std::cout, N_lines);
+                save_to_file(data, output_directory+"selected_N_lines.txt", N_lines);
                 break;
             }
             case 2: {

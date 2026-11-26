@@ -10,6 +10,8 @@
 #include <vector>    // Vectors
 #include <string>    // Strings
 #include <utility>   // To use std::pair
+#include <fstream>   // for saving to file
+#include <cmath>     // for lround
 
 bool read_2D_coords_from_file(const std::string& file, 
                               std::vector<std::pair<double, double>>& data);
@@ -75,10 +77,10 @@ T recursive_self_multiply(T x, T y) {
 }
 
 template <typename Container>
-bool save_to_file(const Container& data, const std::string& filename) {
+bool save_to_file(const Container& data, const std::string& filename, int N = -1) {
     std::ofstream out(filename);
     if (!out.is_open()) { std::cout << "Error opening " << filename << std::endl; return false; }
-    write_data(data, out);
+    write_data(data, out, N);
     std::cout << "Saved to " << filename << std::endl;
     return true;
 }
