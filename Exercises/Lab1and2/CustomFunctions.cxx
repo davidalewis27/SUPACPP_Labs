@@ -76,6 +76,24 @@ double two_component_vector_magitude(double x, double y) {
 }
 
 
+std::vector<double> compute_two_vector_magnitudes(std::vector<std::pair<double, double>>& data) {
+    std::vector<double> vector_magnitudes;
+    double x;
+    double y;
+    double mag = 0.0;
+    
+    for (int i=0; i<static_cast<double>(data.size()); i++){
+        x = data[i].first;
+        y = data[i].second;
+        mag = two_component_vector_magitude(x,y);
+        vector_magnitudes.push_back(mag);
+    }
+    
+    return vector_magnitudes;
+
+}
+
+
 double chi_squared(const std::vector<double>& obs, const std::vector<double>& expected, const std::vector<double>& errors){
 
     int N=obs.size();
@@ -168,6 +186,11 @@ int least_squares_fit(const std::string& data_file,
         
         // Read errors file
         if (!read_2D_coords_from_file(error_file, data_err)) {
+            return -1;
+        }
+        
+        if (data_err.size() != data.size()) {
+            std::cout << "Error file and data file not the same length" << std::endl;
             return -1;
         }
         

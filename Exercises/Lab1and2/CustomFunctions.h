@@ -41,11 +41,12 @@ void write_data(const Container& data, std::ostream& out, int N = -1) {
 
 
 double two_component_vector_magitude(double x, double y);
+std::vector<double> compute_two_vector_magnitudes(std::vector<std::pair<double, double>>& data);
 
 int least_squares_fit(const std::string& data_file, 
                       double& gradient, 
                       double& intercept, 
-                      const std::string& output_file = "least_squares_fit.txt", 
+                      const std::string& output_file, 
                       const std::string& error_file = "");
 
 void get_user_choice(int& user_choice);
@@ -71,4 +72,13 @@ T recursive_self_multiply(T x, T y) {
     } else {
         return half * half * x;                    // n odd:  (x^(n/2))^2 * x
     }
+}
+
+template <typename Container>
+bool save_to_file(const Container& data, const std::string& filename) {
+    std::ofstream out(filename);
+    if (!out.is_open()) { std::cout << "Error opening " << filename << std::endl; return false; }
+    write_data(data, out);
+    std::cout << "Saved to " << filename << std::endl;
+    return true;
 }

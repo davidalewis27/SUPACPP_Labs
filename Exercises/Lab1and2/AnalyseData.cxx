@@ -49,47 +49,22 @@ int main()
                 } 
                 
                 write_data(data, std::cout, N_lines);
-                
-                // wasn't sure if this also needed written to file
-                // so I'll do it just in case
-                std::string selected_N_file = "selected_N_data.txt";
-                std::ofstream out_stream;
-                // Open the file
-                out_stream.open(output_directory + selected_N_file);
-                write_data(data, out_stream, N_lines);
-                out_stream.close();
                 break;
             }
             case 2: {
-                int N_points;
-                double x;
-                double y;
+
                 std::vector<double> vector_magnitudes;
-                double mag=0.0;
-                N_points = data.size();
                 std::cout << "Requested task: 2" << std::endl;
-                for (int i=0; i<N_points; i++){
-                    x = data[i].first;
-                    y = data[i].second;
-                    mag = two_component_vector_magitude(x,y);
-                    // std::cout << "vec = (" << x << "," << y << ") --> magnitude = " << mag << std::endl;
-                    vector_magnitudes.push_back(mag);
-                }
-                write_data(vector_magnitudes, std::cout, N_points);
-                
-                
+                vector_magnitudes = compute_two_vector_magnitudes(data);
+                write_data(vector_magnitudes, std::cout);
                 std::string vector_mag_file = "vector_magnitudes.txt";
-                std::ofstream out_stream;
-                // Open the file
-                out_stream.open(output_directory + vector_mag_file);
-                write_data(vector_magnitudes, out_stream);
-                out_stream.close();
+                save_to_file(vector_magnitudes, output_directory + vector_mag_file);
                 break;
             } 
             
             case 3: {
                 std::cout << "Requested task: 3" << std::endl;
-                least_squares_fit(input_file,gradient,intercept);
+                least_squares_fit(input_file,gradient,intercept,output_directory+"least_squares_fit.txt");
                 break;
             }    
             
@@ -116,10 +91,7 @@ int main()
                 }
                 write_data(x_pow_ys, std::cout);
                 std::string x_exp_y_file = "x_pow_y.txt";
-                std::ofstream out_stream;
-                out_stream.open(output_directory + x_exp_y_file);
-                write_data(x_pow_ys, out_stream);
-                out_stream.close();
+                save_to_file(x_pow_ys, output_directory + x_exp_y_file);
                 break;
             }
             
