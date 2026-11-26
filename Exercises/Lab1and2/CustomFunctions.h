@@ -1,11 +1,15 @@
+// CustomFunctions.h
+// As part of the SUPACPP Course 2026
+// Assignment #1
+// Author: David Lewis
+// Date (last modified): 26/11/2026
+
+
 #pragma once
 #include <iostream>  // I/O
 #include <vector>    // Vectors
 #include <string>    // Strings
 #include <utility>   // To use std::pair
-#include <fstream>   //
-#include <cmath>     //
-#include <stdexcept> // Handle exceptions
 
 bool read_2D_coords_from_file(const std::string& file, 
                               std::vector<std::pair<double, double>>& data);
@@ -60,7 +64,7 @@ T recursive_self_multiply(T x, T y) {
     if (n == 0) return T(1);                       // base case: x^0 = 1
     if (n < 0)  return T(1) / recursive_self_multiply(x, T(-n));   // x^-n = 1 / x^n
 
-    double half = recursive_self_multiply(x, T(n / 2)); // x^(n/2)
+    T half = recursive_self_multiply(x, T(n / 2)); // x^(n/2)
 
     if (n % 2 == 0) {
         return half * half;                        // n even: (x^(n/2))^2

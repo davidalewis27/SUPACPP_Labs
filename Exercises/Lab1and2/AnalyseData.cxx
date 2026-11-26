@@ -2,7 +2,7 @@
 // As part of the SUPACPP Course 2026
 // Assignment #1
 // Author: David Lewis
-// Date (last modified): 22/11/2026
+// Date (last modified): 26/11/2026
 
 #include <iostream>  // I/O
 #include <vector>    // Vectors
@@ -19,22 +19,19 @@ int main()
     std::string error_file = "error2D_float.txt";
     std::string output_directory = "Outputs/";
     int user_choice;
-    int N_points;
-    int N_lines;
-    double mag;
-    double x;
-    double y;
     std::vector<std::pair<double, double>> data;
-    std::vector<double> vector_magnitudes;
     double gradient, intercept;
     bool running = true;
     
-
+    if (!read_2D_coords_from_file(input_file, data)) {
+        return -1;
+    }
+    
     while (running) {
         get_user_choice(user_choice);
         switch (user_choice) {
-            {
-            case 0:
+            
+            case 0: {
                 std::cout << "Exiting." << std::endl;
                 running = false;
             break;
@@ -42,10 +39,7 @@ int main()
             }
             case 1: {
                 std::cout << "Requested task: 1" << std::endl;
-                if (!read_2D_coords_from_file(input_file, data)) {
-                    return -1;
-                }
-        
+                int N_lines;
                 get_number_of_lines(N_lines);
                 
                 // Check if number of lines requested > total
@@ -67,9 +61,11 @@ int main()
                 break;
             }
             case 2: {
-                if (!read_2D_coords_from_file(input_file, data)) {
-                    return -1;
-                }
+                int N_points;
+                double x;
+                double y;
+                std::vector<double> vector_magnitudes;
+                double mag=0.0;
                 N_points = data.size();
                 std::cout << "Requested task: 2" << std::endl;
                 for (int i=0; i<N_points; i++){
@@ -104,10 +100,10 @@ int main()
             }
             
             case 5: {
+                int N_points;
+                double x;
+                double y;
                 std::cout << "Requested task: 5" << std::endl;
-                if (!read_2D_coords_from_file(input_file, data)) {
-                    return -1;
-                }
                 N_points = data.size();
                 double func_val;
                 std::vector<double> x_pow_ys;
@@ -119,6 +115,11 @@ int main()
                     x_pow_ys.push_back(func_val);
                 }
                 write_data(x_pow_ys, std::cout);
+                std::string x_exp_y_file = "x_pow_y.txt";
+                std::ofstream out_stream;
+                out_stream.open(output_directory + x_exp_y_file);
+                write_data(x_pow_ys, out_stream);
+                out_stream.close();
                 break;
             }
             

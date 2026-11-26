@@ -1,3 +1,9 @@
+// CustomFunctions.cxx
+// As part of the SUPACPP Course 2026
+// Assignment #1
+// Author: David Lewis
+// Date (last modified): 26/11/2026
+
 #include <iostream>  // I/O
 #include <vector>    // Vectors
 #include <string>    // Strings
@@ -228,8 +234,14 @@ void get_user_choice(int& user_choice) {
     std::cout << "3 - Least squares fit" << std::endl;
     std::cout << "4 - Least squares fit with chi-squared" << std::endl;
     std::cout << "5 - Compute x^y from data with recursion" << std::endl;
-    std::cin >> user_input;
-    user_choice = std::stoi(user_input);
+    
+    // Keep asking until a valid integer is entered
+    while (!(std::cin >> user_choice)) {
+        std::cout << "Invalid integer choice, please try again" << std::endl;
+        std::cin.clear();                   // reset the fail state
+        std::string discard;
+        std::getline(std::cin, discard);    // throw away the rest of the bad line
+    }
     
 }
 
