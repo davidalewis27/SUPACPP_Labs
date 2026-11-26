@@ -55,28 +55,14 @@ bool read_2D_coords_from_file(const std::string& file,
 
 
 void get_number_of_lines(int& N) {
-    bool not_negative=false;
-    std::string user_input;
     // Request user to give number of lines to read
     std::cout << "Please enter the number of lines to be printed" << std::endl;
-    
-    std::cin >> user_input;
-    N = std::stoi(user_input);
-    std::cout << "Requested " << N << " lines to be printed" << std::endl;
-    
-    
-    // I'm not sure why they would ask for negative lines
-    // but might as well check for it
-    while (!not_negative) {
-        if (N < 0) {
-            std::cout << "Please enter a positive integer number of lines" << std::endl;
-            std::cin >> user_input;
-            N = std::stoi(user_input);
-            std::cout << "Requested " << N << " lines to be printed" << std::endl;
-        }
-        else{
-            not_negative = true;
-        }
+    while (!(std::cin >> N) || N < 0) {
+        if (std::cin.eof()) { N = 0; return; }
+        std::cout << "Please enter a non-negative whole number" << std::endl;
+        std::cin.clear();
+        std::string discard;
+        std::getline(std::cin, discard);
     }
     
 }
@@ -237,10 +223,17 @@ void get_user_choice(int& user_choice) {
     
     // Keep asking until a valid integer is entered
     while (!(std::cin >> user_choice)) {
-        std::cout << "Invalid integer choice, please try again" << std::endl;
-        std::cin.clear();                   // reset the fail state
-        std::string discard;
-        std::getline(std::cin, discard);    // throw away the rest of the bad line
+        if (std::cin.eof()) {
+            std::cout << "End of input, exiting." << std::endl;
+            user_choice = 0;
+            return;   
+        }
+        else {
+            std::cout << "Invalid integer choice, please try again" << std::endl;
+            std::cin.clear();                   // reset the fail state
+            std::string discard;
+            std::getline(std::cin, discard);    // throw away the rest of the bad line
+        }   
     }
     
 }
